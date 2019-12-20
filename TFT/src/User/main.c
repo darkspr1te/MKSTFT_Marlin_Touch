@@ -19,10 +19,10 @@ GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIOD->BSRR=1<<6 ;
        GPIOD->BSRR=1<<5 ;Delay_ms(50);
     GPIOD->BRR=1<<5 ;
-while (0)
-{
+  while (0)
+  {
   
- // GPIOD->BSRR=1<<6 ;
+  // GPIOD->BSRR=1<<6 ;
    GPIOD->BSRR=1<<5 ;
    Delay_ms(150);
    GPIOD->BRR=1<<6;
@@ -31,8 +31,12 @@ while (0)
    Delay_ms(1000);
    
 
+    }
+
 }
-}
+
+//Setup all GPIO not just LCD based ones -- darkspr1te 
+
 void Hardware_GenericInit(void)
 {
   NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
@@ -58,21 +62,13 @@ void Hardware_GenericInit(void)
   GPIO_Mode_Out_PP = 0x10,
   GPIO_Mode_AF_OD = 0x1C,
   GPIO_Mode_AF_PP = 0x18
-
-
-*/
-
-  //GPIO_Remap_USART2
+ 
   //GPIO_InitTypeDef GPIO_InitStructure;
-  
-RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
-//RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
-GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);
- //GPIO_PinRemapConfig(GPIO_Remap_USART2|GPIO_PartialRemap_USART3, ENABLE);
+   //GPIO_PinRemapConfig(GPIO_Remap_USART2|GPIO_PartialRemap_USART3, ENABLE);
  ////GPIO_PinRemapConfig(GPIO_Remap_USART3, ENABLE);
-   Serial_Init(115200);
-   
-   while(0)
+  // Serial_Init(115200);
+   //RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+while(0)
    {
  
 
@@ -83,8 +79,22 @@ GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);
    //Serial_Puts(SERIAL_PORT_3,"Uart 3 Start\n\r"); 
    Delay_ms(170);
    }
-  // Serial_Puts(SERIAL_PORT_2,"Testing 2");
-  // Serial_Puts(SERIAL_PORT_3,"Testing 3");
+*/
+
+
+
+ //GPIO_Remap_USART2 
+RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
+GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);
+
+//
+//Enable serial early for debug, UART1 - wifi plug TXD/RXD, UART2 AUX1 TX/RX, UART3 TX/RX Wifi plug 
+//
+
+  // Serial_Init(115200);
+  //Serial_Puts(SERIAL_PORT,"Uart 1 Start\n\r"); 
+  // Serial_Puts(SERIAL_PORT_2,"Uart 3 Start");
+  // Serial_Puts(SERIAL_PORT_3,"Uart 3 Start");
   XPT2046_Init();
   W25Qxx_Init();
   LCD_Init();
@@ -94,18 +104,9 @@ GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);
   GUI_DispString(100, 0, (u8*)"System Start");
   Delay_ms(500);
   scanUpdates();
+  //causes a hang but no code is executed , bug 
   //SD_DeInit();
-  /*
-for (int x=0;x<0xfff;x++)
-{
-  W25Qxx_EraseSector( x);
-  Delay_ms(10);
-  Serial_Puts(SERIAL_PORT_2,"write\n\r");
-  //Serial_Puts(SERIAL_PORT_2,x);
-}
-GUI_Clear(BLACK);
-  GUI_DispString(100, 0, (u8*)"erase done ");
-  //while(1);*/
+
 #if LCD_ENCODER_SUPPORT
   LCD_EncoderInit();
 #endif
@@ -120,7 +121,7 @@ GUI_Clear(BLACK);
 //storePara();
   if(readStoredPara() == false) // Read settings parameter
   {    
-  TSC_Calibration();
+   TSC_Calibration();
    storePara();
   }
     

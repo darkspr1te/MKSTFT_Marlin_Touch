@@ -122,8 +122,8 @@
   #define SERIAL_PORT_3 _USART3
   #define SERIAL_PORT_4 _UART4
 #elif defined(MKS_32_V1_4)
-  #define SERIAL_PORT   _USART2
-  #define SERIAL_PORT_2 _USART1
+  #define SERIAL_PORT   _USART1
+  #define SERIAL_PORT_2 _USART2
   #define SERIAL_PORT_3 _USART3
  // #define SERIAL_PORT_4 _UART4
 #endif
