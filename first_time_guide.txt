@@ -1,0 +1,8 @@
+** First Time flash guide**
+
+When you flash your .bin file (or elf via platform io) you wont have fonts/icons, place MKS folder from "Copy to SD Card root directory to update" folder to root of SD-CARD,
+create reset.txt in root of SD-CARD
+reset MKS unit and system will flash fonts & icons then do touch calibration and store results.
+
+future flash &/or font updates will be readable as fonts stored on SPI chip. 
+
