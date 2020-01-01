@@ -72,10 +72,8 @@
 #else
   #define VECT_TAB_FLASH 0x0807000
 #endif
-  //#define HSE_VALUE ((uint32_t)8000000) //8Mhz
-  #define HSE_VALUE ((uint32_t)16000000) //16Mhz
-  //#define HSE_VALUE ((uint32_t)25000000) //16Mhz
-  #define F_CPUM 72
+  #define HSE_VALUE ((uint32_t)25000000) //25Mhz XTAL
+  #define F_CPUM 48
   #define STM32F10X_CL
   #include "stm32f10x.h"
 #endif
@@ -122,8 +120,8 @@
   #define SERIAL_PORT_3 _USART3
   #define SERIAL_PORT_4 _UART4
 #elif defined(MKS_32_V1_4)
-  #define SERIAL_PORT   _USART1
-  #define SERIAL_PORT_2 _USART2
+  #define SERIAL_PORT   _USART2
+  #define SERIAL_PORT_2 _USART1
   #define SERIAL_PORT_3 _USART3
  // #define SERIAL_PORT_4 _UART4
 #endif
