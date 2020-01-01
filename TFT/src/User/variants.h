@@ -255,8 +255,8 @@
   #define U_DISK_SUPPROT
   #define USE_USB_OTG_FS
 #elif defined(MKS_32_V1_4)
-  //#define U_DISK_SUPPROT
-  //#define USE_USB_OTG_FS
+  #define U_DISK_SUPPROT
+  #define USE_USB_OTG_FS
 #endif
 
 //extend function(PS_ON, filament_detect)
@@ -274,12 +274,10 @@
 //Debug disable, free pins for other function
 #if defined(TFT35_V1_0) || defined(TFT35_V1_1) || defined(TFT35_V1_2) || defined(TFT28_V1_0) || defined(TFT35_V2_0)
   #define DISABLE_JTAG    //free JTAG(PB3/PB4) for SPI3
-#elif defined(TFT24_V1_1)
-  #define DISABLE_DEBUG   //
+#elif defined(TFT24_V1_1) 
+  #define DISABLE_DEBUG   
 #elif defined(TFT35_V3_0)
   //stm32f207 needn't this
-#elif defined(MKS_32_V1_4)
-  //stm32f107 dont need this offf
 #endif
 
 //LCD resolution, font and icon size
