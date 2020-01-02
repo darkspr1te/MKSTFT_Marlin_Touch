@@ -205,7 +205,7 @@ void scanUpdates(void)
       updateIcon();
      
     }
-    if (result) f_rename(ROOT_DIR, ROOT_DIR".CUR");
+   // if (result) f_rename(ROOT_DIR, ROOT_DIR".CUR");
     scanResetDir();
   }
   

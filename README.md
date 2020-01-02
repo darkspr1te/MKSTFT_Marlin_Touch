@@ -1,17 +1,23 @@
 So I sat down and ported the bigtreetech LCD Marlin control system from 
 https://github.com/bigtreetech/BIGTREETECH-TouchScreenFirmware
-
-Uarts are problem still, but can be tested by :-
-changing 
-#define SERIAL_PORT   _USART2 (#125)
-to #define SERIAL_PORT   _USART1 
-&
-#define SERIAL_PORT_2   _USART2 (#126)
-in variants.h 
-
-and 
-connecting TXD/RXD from wifi connector to the TX/RX of the Ramps cable , open a terminal on the ramps board and you should see commands echoed back, 
+to 
 https://github.com/darkspr1te/MKSTFT_Marlin_Touch
+
+
+
+Uarts are problem still,
+to switch serial port (Wifi TXD,RXD,RX,TX or AUX1 TX,RX)
+UART1 WIFI: TXD,RXD
+UART2 AUX1: TX,RX
+UART3 WIFI: TX,RX
+in variants.h 
+#define SERIAL_PORT   _USART1 (line #125)
+
+
+
+
+connecting TXD/RXD from wifi connector to the TX/RX of the Ramps cable , open a terminal on the ramps board and you should see commands echoed back, 
+
 After flashing , copy MKS folder to SDCARD , create blank file reset.txt (this triggers touch calib) 
 reset MKSTFT , fonts should update right away. 
 Enjoy, feel free to Fork , 
@@ -24,20 +30,26 @@ N.B
  switch board type from   #define STM32F10X_CL (#79 variants.h file ) 
 to 
   #define STM32F10X_HD
+
   will still function abliet slower, must port those _CL changes to other lib(arduino one)
   as is now show's it's correct speed loading data from spi (test difference you will see) 
   only issue is under _CL the math is off for uart, errors occur. 
+
 i2c eeprom untested, 
 built usin CMSIS libs/STDPeriph
 SDDeinit(); causes hang 
 see boot.c for SPI EEprom & sdcard updating code  
 
 
+Big Thanks to :-
+BigTreetech (excelent ramps 32 board+silent step sticks on marlin 2.0)
+MakerBase (MKSTFT LCD on BigTreetech Ramps Mega GT2560)
 
 
 # software version
 ### Vx.x.25.1
 - Added MKS 2.8/3.2 TFT touch marlin control panel - by darkspr1te 
+- Added new variant MKSTFT28/MKSTFT32 V1.4 Hardware 
 ### Vx.x.25
 - change character encoding from GBK to UTF-8, compatible with new languages
 - add "Preheat" menu for one button preheating(PLA, PETG, ABS)

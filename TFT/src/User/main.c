@@ -35,24 +35,56 @@ GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 
 }
 
-//Setup all GPIO not just LCD based ones -- darkspr1te 
-
-void Hardware_GenericInit(void)
+void gp_config()
 {
-  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
-  Delay_init(F_CPUM);  
-  OS_TimerInit(9999, F_CPUM-1);  // System clock timer, cycle 10ms
-  
-#ifdef DISABLE_DEBUG 
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO , ENABLE);
-  GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE); //disable JTAG & SWD
-#endif
-  
- 
-#ifdef DISABLE_JTAG
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO , ENABLE);
-  GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
-#endif
+    GPIO_InitTypeDef GPIO_InitStructure;   
+   
+#ifdef USE_STM3210C_EVAL     
+  /* Enable the USART2 Pins Software Remapping */   
+  GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);     
+#elif defined USE_STM3210B_EVAL || defined USE_STM32100B_EVAL   
+  /* Enable the USART2 Pins Software Remapping */   
+  GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);   
+#endif   
+   GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);   
+  /* Configure USARTy Rx as input floating */   
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;   
+  GPIO_InitStructure.GPIO_Mode =GPIO_Mode_AF_OD;   
+  GPIO_Init(GPIOD, &GPIO_InitStructure);   
+      
+  /* Configure USARTy Tx as alternate function push-pull */   
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;   
+  GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;   
+  GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_OD;   
+  GPIO_Init(GPIOD, &GPIO_InitStructure);   
+
+
+RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
+RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD,ENABLE);
+
+//RCC_APB2PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+
+GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);
+
+
+}
+//Setup all GPIO not just LCD based ones -- darkspr1te 
+void enable_uart2()
+{
+//  RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOD | RCC_APB2Periph_AFIO, ENABLE);
+/* Enable UART clock */
+
+
+
+gp_config();
+ Serial_Init(115200);
+ while (0){
+  //Serial_Puts(SERIAL_PORT,"UART 1\n\r"); 
+  Serial_Puts(SERIAL_PORT_2,"UART 2\n\r");
+  Delay_ms(1000);
+ }
+
 /*
 { GPIO_Mode_AIN = 0x0,
   GPIO_Mode_IN_FLOATING = 0x04,
@@ -84,16 +116,47 @@ while(0)
 
 
  //GPIO_Remap_USART2 
-RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
-GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);
+ /*
+ (GPIO_InitTypeDef GPIO_InitStructure;
+ GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5|GPIO_Pin_6;
+GPIOD->BRR=1<<5;
+GPIOD->BRR=1<<6;
 
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF_PP;
+GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD;
+	GPIO_Init(GPIOD,&GPIO_InitStructure);
+*/
+
+
+}
+void Hardware_GenericInit(void)
+{
+  NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+  Delay_init(F_CPUM);  
+  OS_TimerInit(9999, F_CPUM-1);  // System clock timer, cycle 10ms
+  enable_uart2();
+#ifdef DISABLE_DEBUG 
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO , ENABLE);
+  GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE); //disable JTAG & SWD
+#endif
+  
+ 
+#ifdef DISABLE_JTAG
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO , ENABLE);
+  GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
+#endif
+
+ // while(1);
+  /*
+  */
+
+
+//gpio_mode_setup(GPIOD, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO5|GPIO6);
 //
 //Enable serial early for debug, UART1 - wifi plug TXD/RXD, UART2 AUX1 TX/RX, UART3 TX/RX Wifi plug 
 //
 
-  // Serial_Init(115200);
-  //Serial_Puts(SERIAL_PORT,"Uart 1 Start\n\r"); 
-  // Serial_Puts(SERIAL_PORT_2,"Uart 3 Start");
+  
   // Serial_Puts(SERIAL_PORT_3,"Uart 3 Start");
   XPT2046_Init();
   W25Qxx_Init();

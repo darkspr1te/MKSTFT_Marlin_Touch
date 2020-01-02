@@ -73,10 +73,12 @@
   #define VECT_TAB_FLASH 0x0807000
 #endif
   //#define HSE_VALUE ((uint32_t)8000000) //8Mhz
-  #define HSE_VALUE ((uint32_t)16000000) //16Mhz
-  //#define HSE_VALUE ((uint32_t)25000000) //16Mhz
+  //#define HSE_VALUE ((uint32_t)16000000) //16Mhz
+  #define HSE_VALUE ((uint32_t)25000000) //25Mhz
   #define F_CPUM 72
   #define STM32F10X_CL
+  //#define SYSCLK_FREQ_HSE ((uint32_t)8000000)//25Mhz
+  
   #include "stm32f10x.h"
 #endif
 
@@ -234,6 +236,7 @@
 #elif defined(MKS_32_V1_4)
   //Keep Things quiet 
   //#define BUZZER_PIN    PA2
+   //#define ST7920_SPI    _SPI2
 #endif
 
 //LCD Encoder support
@@ -248,7 +251,9 @@
   #define LCD_ENCB_PIN  PC9
   #define LCD_BTN_PIN   PC8
 #elif defined(MKS_32_V1_4)
-
+  //#define LCD_ENCA_PIN  PB5
+  //#define LCD_ENCB_PIN  PB4
+  //#define LCD_BTN_PIN   PB1
 #endif
 #define LCD_ENCODER_SUPPORT (defined(LCD_ENCA_PIN) && defined(LCD_ENCB_PIN) && defined(LCD_BTN_PIN))
 
@@ -269,8 +274,8 @@
   #define PS_ON_PIN      PC12
   #define FIL_RUNOUT_PIN PA15
 #elif defined(MKS_32_V1_4)
-  #define PS_ON_PIN      PB0
-  #define FIL_RUNOUT_PIN PB1
+ // #define PS_ON_PIN      PB0
+ // #define FIL_RUNOUT_PIN PB1
 #endif
     
 //Debug disable, free pins for other function
