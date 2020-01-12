@@ -67,11 +67,7 @@
   #define STM32F2XX
   #include "stm32f2xx.h"
 #elif defined(MKS_32_V1_4)
-#ifndef BOOTLOADER
-  #define VECT_TAB_FLASH 0x08000000
-#else
-  #define VECT_TAB_FLASH 0x0807000
-#endif
+
   #define HSE_VALUE ((uint32_t)25000000) //25Mhz XTAL
   #define F_CPUM 48
   #define STM32F10X_CL
