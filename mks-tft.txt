@@ -1,0 +1,117 @@
+# Build Guide/Porting information
+
+## Build Using platformio 
+
+For changes and adding additional boards see :-
+
+TFT/src/User/variants.h
+plaformio.ini
+
+In platform io you add a new board type (so long as it's stm32 based )
+
+'''
+[env:MKS_32_V1_4]
+platform      = ststm32
+framework     = stm32cube
+board         = STM32F107VC
+src_filter    = ${stm32f10x.default_src_filter} +<src/Libraries/Startup/stm32f10x_hd>
+extra_scripts = pre:buildroot/scripts/custom_filename.py
+                buildroot/scripts/stm32f10x_0x7000_iap.py
+build_flags   = ${stm32f10x.build_flags}
+  -DHARDWARE="MKS_32_V1_4" 
+  -DMKS_32_V1_4=
+  -DVECT_TAB_FLASH=0x08007000
+'''
+
+you need to change env:MKS_32_V1_4, STM32F107Vc, DHARDWARE= ,stm32f10x_0x7000, VECT_TAB_FLASH , -DMKS_32_V1_4
+to suit your new device,
+
+the values env:MKS_32_V1_4, -DHARDWARE="MKS_32_V1_4" , -DMKS_32_V1_4= are defines that follow you board through the build defining the 
+specifics to your board , you will seee #ifdefs for example 
+
+#if defined(MKS_32_V1_4)
+bits for intit of you board or changes that differ only for this point and your board
+#endif
+
+this also defines the filename via -DHARDWARE="MKS_32_V1_4" and the script pre:buildroot/scripts/custom_filename.py 
+
+
+
+the files stm32f10x_0x7000_iap.py and the define VECT_TAB_FLASH=0x08007000 define the entry point of your code, 
+theres also a assoiciated stm32f10x_0x7000_iap.ld file located in boards/ldscripts 
+the stack, ram values generally stay the same, the flash size varies on where the bootloader size/app start points are
+defines for 0x0 (no bootloader), 0x3000,0x6000,0x7000,0x8000 are available , 
+change the define in platformio and adjust DVECT_TAB_FLASH value to suit.
+
+
+to build only you device adjust the default_envs = value under [platformio]
+example :-
+'''
+[platformio]
+src_dir      = TFT
+boards_dir   = buildroot/boards
+default_envs = MKS_32_V1_4
+'''
+builds env:MKS_32_V1_4 board with boot from address 0x7000 (app needs a bootloader) 
+
+or :-
+'''
+[platformio]
+src_dir      = TFT
+boards_dir   = buildroot/boards
+default_envs = MKS_32_V1_4_NOBL
+'''
+
+builds env:MKS_32_V1_4_NOBL board with boot from 0x0 (no bootloader needed) 
+
+The MKS_32_V1_4 changes made also init's the hardware , if your bootloader does this for you normally dont forget to add the init
+code for your lcd hardware/touch  
+once you device port has been added you will also need to upload the bmp's/icons/fonts to the spi flash, 
+see the README.md for those guides, the MKS_32_V1_4 template looks for files in sdcard:/MKS 
+
+
+
+
+Quick tip, you can DIFF this repo against the master to see whats needed to make a new board :-) , generally for STM though :-(     
+for other devices I dunno, 
+
+
+
+darkspr1te 
+
+**** Old info ******
+So I sat down and ported the bigtreetech LCD Marlin control system from 
+https://github.com/bigtreetech/BIGTREETECH-TouchScreenFirmware
+Uarts are problem still, but can be tested by :-
+changing 
+'''
+#define SERIAL_PORT   _USART2 (#125)
+to 
+#define SERIAL_PORT   _USART1 
+&
+#define SERIAL_PORT_2   _USART2 (#126)
+in variants.h 
+'''
+and 
+connecting TXD/RXD from wifi connector to the TX/RX of the Ramps cable , open a terminal on the ramps board and you should see commands echoed back, 
+https://github.com/darkspr1te/MKSTFT_Marlin_Touch
+After flashing , copy MKS folder to SDCARD , create blank file reset.txt (this triggers touch calib) 
+reset MKSTFT , fonts should update right away. 
+Enjoy, feel free to Fork , 
+
+
+N.B 
+ USB Host hangs, CPU / XTal speed is incorrect but close enough for 115200 baud to work , will loose uart sync sometimes,
+ using   UART2 as main uart(via AUX1 TX/RX) not working, AUX1 TX/RX is 5v, low is 2.56 - need to test on another board 
+ speaker works but disabled for normal use
+ switch board type from   #define STM32F10X_CL (#79 variants.h file ) 
+to 
+  #define STM32F10X_HD
+  will still function abliet slower, must port those _CL changes to other lib(arduino one)
+  as is now show's it's correct speed loading data from spi (test difference you will see) 
+  only issue is under _CL the math is off for uart, errors occur. 
+i2c eeprom untested, 
+built usin CMSIS libs/STDPeriph
+SDDeinit(); causes hang 
+see boot.c for SPI EEprom & sdcard updating code  
+
