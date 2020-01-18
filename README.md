@@ -1,37 +1,10 @@
-So I sat down and ported the bigtreetech LCD Marlin control system from 
-https://github.com/bigtreetech/BIGTREETECH-TouchScreenFirmware
+#MKSTFT Marlin Touch
 
-Uarts are problem still, but can be tested by :-
-changing 
-#define SERIAL_PORT   _USART2 (#125)
-to #define SERIAL_PORT   _USART1 
-&
-#define SERIAL_PORT_2   _USART2 (#126)
-in variants.h 
-
-and 
-connecting TXD/RXD from wifi connector to the TX/RX of the Ramps cable , open a terminal on the ramps board and you should see commands echoed back, 
-https://github.com/darkspr1te/MKSTFT_Marlin_Touch
-After flashing , copy MKS folder to SDCARD , create blank file reset.txt (this triggers touch calib) 
-reset MKSTFT , fonts should update right away. 
-Enjoy, feel free to Fork , 
-
-
-N.B 
- USB Host hangs, CPU / XTal speed is incorrect but close enough for 115200 baud to work , will loose uart sync sometimes,
- using   UART2 as main uart(via AUX1 TX/RX) not working, AUX1 TX/RX is 5v, low is 2.56 - need to test on another board 
- speaker works but disabled for normal use
- switch board type from   #define STM32F10X_CL (#79 variants.h file ) 
-to 
-  #define STM32F10X_HD
-  will still function abliet slower, must port those _CL changes to other lib(arduino one)
-  as is now show's it's correct speed loading data from spi (test difference you will see) 
-  only issue is under _CL the math is off for uart, errors occur. 
-i2c eeprom untested, 
-built usin CMSIS libs/STDPeriph
-SDDeinit(); causes hang 
-see boot.c for SPI EEprom & sdcard updating code  
-
+###MKS Marlin touch screen firmware repo
+- See mks-tft.txt for MKS Touch board build instructions and info
+- See https://github.com/darkspr1te/stm32f107vc_sd_bootloader for bootloader source for platformio 
+- See https://github.com/delwinbest/BIGTREETECH-TouchScreenFirmware for builds against master with MKSTFT patches 
+(updated more than https://github.com/darkspr1te/MKSTFT_Marlin_Touch ) 
 
 
 
