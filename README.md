@@ -1,6 +1,6 @@
-#MKSTFT Marlin Touch
+# MKSTFT Marlin Touch
 
-###MKS Marlin touch screen firmware repo
+### MKS Marlin touch screen firmware repo
 - See mks-tft.txt for MKS Touch board build instructions and info
 - See https://github.com/darkspr1te/stm32f107vc_sd_bootloader for bootloader source for platformio 
 - See https://github.com/delwinbest/BIGTREETECH-TouchScreenFirmware for builds against master with MKSTFT patches 
