@@ -3,8 +3,11 @@
 ### MKS Marlin touch screen firmware repo
 - See mks-tft.txt for MKS Touch board build instructions and info
 - See https://github.com/darkspr1te/stm32f107vc_sd_bootloader for bootloader source for platformio 
-- See https://github.com/delwinbest/BIGTREETECH-TouchScreenFirmware for builds against master with MKSTFT patches 
-(updated more than https://github.com/darkspr1te/MKSTFT_Marlin_Touch ) 
+- See https://github.com/delwinbest/BIGTREETECH-TouchScreenFirmware for builds against master with MKSTFT patches
+  (updated more than https://github.com/darkspr1te/MKSTFT_Marlin_Touch ) 
+- See https://github.com/luc-github/ESP3D-WEBUI for esp2866/esp32 firmware to add custom wifi firmware  
+
+
 
 
 
