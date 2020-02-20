@@ -20,7 +20,7 @@ enum
   ITALIAN,
   POLISH,
   SLOVAK,
-  UKRAINE
+  UKRAINE,
   LANGUAGE_NUM,
 };
 
