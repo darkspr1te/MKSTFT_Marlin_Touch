@@ -149,6 +149,7 @@ void sendQueueCmd(void)
   if(infoHost.wait == true)    return;  
   if(infoCmd.count == 0)       return;
   
+  bool avoid_terminal = false;
   u16  cmd=0;
   switch(infoCmd.queue[infoCmd.index_r].gcode[0])
   {
@@ -156,6 +157,16 @@ void sendQueueCmd(void)
       cmd=strtol(&infoCmd.queue[infoCmd.index_r].gcode[1],NULL,10);
       switch(cmd)
       {
+        case 0:
+          if (isPrinting()) {
+            setPrintPause(true,true);
+          }
+          break;
+        case 1:
+          if (isPrinting()) {
+            setPrintPause(true,true);
+          }
+          break;
         case 18: //M18/M84 disable steppers
         case 84:
           coordinateSetClear(false);
@@ -212,6 +223,9 @@ void sendQueueCmd(void)
 
         case 105: //M105
           heatSetUpdateWaiting(false);
+          #ifdef MENU_LIST_MODE
+            avoid_terminal = infoSettings.terminalACK;
+          #endif
           break;
 
         case 106: //M106
@@ -364,7 +378,9 @@ void sendQueueCmd(void)
   
   setCurrentAckSrc(infoCmd.queue[infoCmd.index_r].src);
   Serial_Puts(SERIAL_PORT, infoCmd.queue[infoCmd.index_r].gcode); //
+  if (avoid_terminal != true){
   sendGcodeTerminalCache(infoCmd.queue[infoCmd.index_r].gcode, TERMINAL_GCODE);
+  }
   infoCmd.count--;
   infoCmd.index_r = (infoCmd.index_r + 1) % CMD_MAX_LIST;
   

@@ -52,10 +52,9 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE * pdev)
 #else                           // USE_STM322xG_EVAL
   GPIO_InitTypeDef GPIO_InitStructure;
 #ifdef USE_USB_OTG_FS
- 
- 
- RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
- 
+
+  RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
+
   /* Configure DM DP Pins */
   GPIO_InitStructure.GPIO_Pin = GPIO_Pin_11 | GPIO_Pin_12;
 
@@ -70,7 +69,6 @@ void USB_OTG_BSP_Init(USB_OTG_CORE_HANDLE * pdev)
 
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_SYSCFG, ENABLE);
   RCC_AHB2PeriphClockCmd(RCC_AHB2Periph_OTG_FS, ENABLE);
- 
 #else                           // USE_USB_OTG_HS
 
 #ifdef USE_ULPI_PHY             // ULPI

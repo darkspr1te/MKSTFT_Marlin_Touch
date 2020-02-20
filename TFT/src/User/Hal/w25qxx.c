@@ -8,13 +8,13 @@
 //Ƭѡ
 void W25Qxx_SPI_CS_Set(u8 level)
 {
-   #if defined(MKS_32_V1_4)
-   if (level==0)
-    GPIO_ResetBits(FLASH_nCS_GPIO_Port,FLASH_nCS_Pin);
-   else
-   GPIO_SetBits(FLASH_nCS_GPIO_Port,FLASH_nCS_Pin);
-   #else
-      SPI_CS_Set(W25Qxx_SPI,level);
+  #if defined(MKS_32_V1_4)
+  if (level==0)
+  GPIO_ResetBits(GPIOB,GPIO_Pin_9);
+  else
+  GPIO_SetBits(GPIOB,GPIO_Pin_9);
+  #else
+  SPI_CS_Set(W25Qxx_SPI,level);
   #endif
 }
 
@@ -81,8 +81,7 @@ void W25Qxx_WritePage(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWr
 void W25Qxx_WriteBuffer(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteToWrite)
 {
   uint8_t NumOfPage = 0, NumOfSingle = 0, Addr = 0, count = 0, temp = 0;
-  
-  
+
   Addr = WriteAddr % W25QXX_SPI_PAGESIZE;//������һҳ���ĸ���ַ��ʼд����
   count = W25QXX_SPI_PAGESIZE - Addr;//������ҳ������д��������
   NumOfPage =  NumByteToWrite / W25QXX_SPI_PAGESIZE;//����Ҫ��������ݳ��ȿ���д����ҳ
@@ -147,7 +146,6 @@ void W25Qxx_WriteBuffer(uint8_t* pBuffer, uint32_t WriteAddr, uint16_t NumByteTo
       }
     }
   }
-  
 }
 
 /*��FLASH�ж�����*/

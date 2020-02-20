@@ -1,8 +1,8 @@
 #include "GUI.h"
 #include "includes.h"
 
-uint16_t foreGroundColor = FK_COLOR;
-uint16_t backGroundColor = BK_COLOR;
+uint16_t foreGroundColor = WHITE;
+uint16_t backGroundColor = BLACK;
 GUI_TEXT_MODE guiTextMode = GUI_TEXTMODE_NORMAL;
 GUI_NUM_MODE guiNumMode = GUI_NUMMODE_SPACE;
 
@@ -57,17 +57,13 @@ GUI_NUM_MODE GUI_GetNumMode(void)
 
 void GUI_Clear(uint16_t color)
 {
-  uint32_t index=0; 
-
+  uint32_t index=0;    
   LCD_SetWindow(0, 0, LCD_WIDTH-1, LCD_HEIGHT-1);
   LCD_WR_REG(0x2C);  
   for(index=0; index<LCD_WIDTH*LCD_HEIGHT; index++)
   {
-   LCD_WR_DATA(color);
-    //LCD_WR_16BITS_DATA(color);
+    LCD_WR_16BITS_DATA(color);
   }
-
-
 }  
 
 static uint8_t pixel_limit_flag = 0;
@@ -744,7 +740,7 @@ void GUI_DispFloat(int16_t x, int16_t y, float num, uint8_t llen, uint8_t rlen, 
     floatBuf[bufIndex++] = (int)(num/GUI_Pow10[rlen-1-i])%10+'0';
     alen++;
   }
-  for(; alen < llen+rlen; alen++)
+  for(; alen < llen+rlen+1; alen++)
   {        
     floatBuf[bufIndex++] = ' ';
   }
@@ -981,13 +977,4 @@ void GUI_DrawWindow(const WINDOW *window, const uint8_t *title, const uint8_t *i
   GUI_SetBkColor(nowBackColor);
   GUI_SetColor(nowFontColor);
   GUI_SetTextMode(nowTextMode);
-}
-
-void GUI_RestoreColorDefault(void){
-  
-  GUI_SetBkColor(BK_COLOR);
-  GUI_SetColor(FK_COLOR);
-  GUI_SetTextMode(GUI_TEXTMODE_NORMAL);
-  GUI_SetNumMode(GUI_NUMMODE_SPACE);
-
 }

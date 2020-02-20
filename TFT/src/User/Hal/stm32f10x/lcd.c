@@ -121,7 +121,6 @@ void LCD_WR_REG(u16 data)
 //data:�Ĵ���ֵ
 void LCD_WR_DATA(u16 data)
 {
-
 	LCD_RS_SET;
 	LCD_CS_CLR;
 	DATAOUT(data);
@@ -135,20 +134,22 @@ void LCD_WR_DATA(u16 data)
 u16 LCD_RD_DATA(void)
 {
   #if defined(MKS_32_V1_4)
-  	LCD_RS_SET;
+  LCD_RS_SET;
 	LCD_CS_CLR;
 	//��ȡ����(���Ĵ���ʱ,������Ҫ��2��)
 	LCD_RD_CLR;
-  	LCD_RD_CLR;
+  LCD_RD_CLR;
   uint8_t  hi_bytes = GPIOE->IDR;
-  	LCD_RD_SET;
-  	LCD_RD_CLR;
-    uint8_t lo_bytes = GPIOE->IDR;
-    	LCD_RD_SET;
+  LCD_RD_SET;
+  LCD_RD_CLR;
+  uint8_t lo_bytes = GPIOE->IDR;
+  LCD_RD_SET;
 	LCD_CS_SET; 
 
-  uint16_t data =(uint16_t)((hi_bytes<<8)+lo_bytes);
-  vu16 ram = data;
+ // uint16_t data =(uint16_t)((hi_bytes<<8)+lo_bytes);
+  //vu16 ram = data;
+  //return ram;
+  return (uint16_t)((hi_bytes<<8)+lo_bytes);
   #else
   vu16 ram;
  	GPIOC->CRL = 0X88888888; //PB0-7  ��������
@@ -167,13 +168,14 @@ u16 LCD_RD_DATA(void)
 	GPIOC->CRL = 0X33333333; //PC0-7  �������
 	GPIOC->CRH = 0X33333333; //PC8-15 �������
 	GPIOC->ODR = 0XFFFF;    //ȫ�������
+  return ram;  
   #endif
-	return ram;  
+
 }
 
 void LCD_GPIO_Config(void)
 {
- 
+  
  #if defined(MKS_32_V1_4)
  
  GPIO_InitTypeDef GPIO_InitStructure;
@@ -185,24 +187,23 @@ void LCD_GPIO_Config(void)
 
   /*Configure GPIO pins : Pin1_Pin Pin2_Pin */
 
-
-GPIO_InitStructure.GPIO_Pin = LCD_nWR_Pin|FLASH_nCS_Pin|FILAMENT_DI_Pin|POWER_DI_Pin;
+//GPIO_InitStructure.GPIO_Pin = LCD_nWR_Pin|FLASH_nCS_Pin|FILAMENT_DI_Pin|POWER_DI_Pin;
+GPIO_InitStructure.GPIO_Pin = GPIO_Pin_14|GPIO_Pin_9;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	//HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
   	GPIO_Init(GPIOB, &GPIO_InitStructure);
-
-  GPIO_InitStructure.GPIO_Pin = SDCARD_nCS_Pin|LCD_RS_Pin|LCD_BACKLIGHT_Pin|LCD_nRD_Pin;
+//GPIO_InitStructure.GPIO_Pin = SDCARD_nCS_Pin|LCD_RS_Pin|LCD_BACKLIGHT_Pin|LCD_nRD_Pin;
+  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13|GPIO_Pin_15;
 GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOD, &GPIO_InitStructure);
  
- GPIO_InitStructure.GPIO_Pin = LCD_nCS_Pin|TOUCH_nCS_Pin;
+ GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8|GPIO_Pin_9;
 GPIO_InitStructure.GPIO_Mode =GPIO_Mode_Out_PP;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
 
- GPIO_InitStructure.GPIO_Pin = TOUCH_DI_Pin;
+ GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5;
 GPIO_InitStructure.GPIO_Mode =GPIO_Mode_IPU;
 GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);
@@ -218,7 +219,7 @@ LCD_RD_SET;//set this as we only change it when reading
 
   #else
   GPIO_InitTypeDef GPIO_InitStructure;
-    
+          
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB |RCC_APB2Periph_GPIOC, ENABLE);
  
   GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;

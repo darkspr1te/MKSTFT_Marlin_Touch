@@ -9,8 +9,8 @@ static USART_TypeDef *usart[_USART_CNT] = {
   UART5,   //TX--PC12 RX--PD2
   USART6}; //TX--PG14 RX--PG9
 
-static const uint16_t uart_tx[_USART_CNT] = {PA9,  PD5, PD8, PC10, PC12, PG14}; //TX
-static const uint16_t uart_rx[_USART_CNT] = {PA10, PD6, PD9, PC11, PD2,  PG9};  //RX
+static const uint16_t uart_tx[_USART_CNT] = {PA9,  PA2, PB10, PC10, PC12, PG14}; //TX
+static const uint16_t uart_rx[_USART_CNT] = {PA10, PA3, PB11, PC11, PD2,  PG9};  //RX
 
 void USART_GPIO_Init(uint8_t port)
 {    
@@ -69,7 +69,7 @@ void USART_Config(uint8_t port, uint32_t baud, uint16_t usart_it)
 {
   USART_Protocol_Init(port, baud);
   USART_IRQ_Init(port, usart_it);
-  USART_GPIO_Init(port);   //ï¿½ï¿½ï¿½Ð³ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Éºï¿½,ï¿½ï¿½Ê¹ï¿½ï¿½IO, ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½Ô¶ï¿½ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ 0xFF
+  USART_GPIO_Init(port);   //ËùÓÐ³õÊ¼»¯Íê³Éºó,ÔÙÊ¹ÄÜIO, ·ñÔòÉÏµçºó»á×Ô¶¯·¢ËÍÒ»¸ö 0xFF
 }
 
 void USART_DeConfig(uint8_t port)

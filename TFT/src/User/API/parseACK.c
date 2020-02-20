@@ -65,6 +65,8 @@ static float ack_second_value()
 
 void ackPopupInfo(const char *info)
 {
+  if(infoMenu.menu[infoMenu.cur] == parametersetting) return;
+
   if (info == echomagic)
   {
     statusScreen_setMsg((u8 *)info, (u8 *)dmaL2Cache + ack_index);
@@ -88,6 +90,7 @@ void syncL2CacheFromL1(uint8_t port)
 
 void parseACK(void)
 { 
+  bool avoid_terminal = false;
   if(infoHost.rx_ok[SERIAL_PORT] != true) return; //not get response data
   
   syncL2CacheFromL1(SERIAL_PORT);
@@ -174,11 +177,17 @@ void parseACK(void)
           heatSyncTargetTemp(i, ack_second_value()+0.5);
         }      
       }
+     #ifdef MENU_LIST_MODE
+      avoid_terminal = infoSettings.terminalACK;
+    #endif
     }
     else if(ack_seen("B:"))		
     {
       heatSetCurrentTemp(BED,ack_value()+0.5);
       heatSyncTargetTemp(BED, ack_second_value()+0.5);
+      #ifdef MENU_LIST_MODE
+      avoid_terminal = infoSettings.terminalACK;
+      #endif
     }
     else if(ack_seen("Mean:"))
     {
@@ -199,6 +208,36 @@ void parseACK(void)
     else if(ack_seen(echomagic) && ack_seen(busymagic) && ack_seen("processing"))
     {
       busyIndicator(STATUS_BUSY);
+    }
+    else if(ack_seen(echomagic) && ack_seen(busymagic) && ack_seen("paused for user"))
+    {
+      goto parse_end;
+    }
+    else if(ack_seen("X driver current: "))
+    {
+      Get_parameter_value[0] = ack_value();
+
+      if(ack_seen("Y driver current: "))
+      Get_parameter_value[1] = ack_value();
+
+      if(ack_seen("Z driver current: "))
+      Get_parameter_value[2] = ack_value();
+
+      if(ack_seen("E driver current: "))
+      Get_parameter_value[3] = ack_value();
+    }
+    else if(ack_seen("M92 X"))
+    {
+      Get_parameter_value[4] = ack_value();
+
+      if(ack_seen("Y"))
+      Get_parameter_value[5] = ack_value();
+
+      if(ack_seen("Z"))
+      Get_parameter_value[6] = ack_value();
+
+      if(ack_seen("E"))
+      Get_parameter_value[7] = ack_value();
     }
 #ifdef ONBOARD_SD_SUPPORT     
     else if(ack_seen(bsdnoprintingmagic) && infoMenu.menu[infoMenu.cur] == menuPrinting)
@@ -226,7 +265,7 @@ void parseACK(void)
     }
     else if(ack_seen(echomagic))
     {
-      for(u8 i = 0; i < aCount(ignoreEcho); i++)
+      for(u8 i = 0; i < COUNT(ignoreEcho); i++)
       {
         if(strstr(dmaL2Cache, ignoreEcho[i])) goto parse_end;
       }
@@ -243,7 +282,9 @@ parse_end:
   {
     Serial_Puts(ack_cur_src, dmaL2Cache);
   }
-  sendGcodeTerminalCache(dmaL2Cache, TERMINAL_ACK);
+  if (avoid_terminal != true){
+    sendGcodeTerminalCache(dmaL2Cache, TERMINAL_ACK);
+  }
 }
 
 void parseRcvGcode(void)

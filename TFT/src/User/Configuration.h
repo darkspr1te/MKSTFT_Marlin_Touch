@@ -1,7 +1,5 @@
 #ifndef _CONFIGRATION_H_
 #define _CONFIGRATION_H_
-//flash mode settings
-
 
 //===========================================================================
 //=========================== Marlin Mode Settings ===========================
@@ -33,14 +31,22 @@
 // Show BTT bootscreen when starting up
 #define SHOW_BTT_BOOTSCREEN
 
+// TFT mode color
+#define TITLE_BACKGROUND_COLOR      BLACK  // Title background color // 0xD928
+#define BACKGROUND_COLOR            BLACK  // Background color // 0x0A29
+#define FONT_COLOR                  WHITE  // Font foreground color
+#define REMINDER_FONT_COLOR         RED    // Reminder font color, such as: "No print attached", "Busy process", etc...
+#define VOLUME_REMINDER_FONT_COLOR  GBLUE  // Volume reminder font color,such as: "Card inserted", "Card removed"
+
+
 #define TOOL_NUM     1    // set in 1~6
 #define EXTRUDER_NUM 1    // set in 1~6
 #define FAN_NUM      1    // set in 1~6
 
-//                       PLA      PETG       ABS     "CUSTOM1" "CUSTOM2"
-#define PREHEAT_BED      {60,      70,       100,       55,       55}
-#define PREHEAT_HOTEND   {200,     250,      230,       200,      200}
-#define PREHEAT_TEXT     {"PLA",  "PETG",   "ABS",     "T2:",    "T3:"}
+//                       PLA      PETG       ABS
+#define PREHEAT_BED      {60,      70,       100}
+#define PREHEAT_HOTEND   {200,     250,      230}
+#define PREHEAT_TEXT     {"PLA",  "PETG",   "ABS"}
 
 #define HEAT_MAX_TEMP    {150,    275,       275,       275,       275,       275,       275}    //max temperature can be set
 #define HEAT_SIGN_ID     {"B:",   "T0:",     "T1:",     "T2:",     "T3:",     "T4:",     "T5:"}
@@ -59,7 +65,8 @@
 
 // Default move speed mm/min
 #define DEFAULT_SPEED_MOVE      3000
-
+#define SPEED_MOVE_SLOW         1000
+#define SPEED_MOVE_FAST         5000
 // Extrude speed mm/min
 #define EXTRUDE_SLOW_SPEED      60
 #define EXTRUDE_NORMAL_SPEED    600
@@ -120,28 +127,28 @@
 // update the icons from alternate icon folder
 #define ALTERNATIVE_MOVE_MENU
 
-//Invert the Y Axis move Direction
+// Invert the Y Axis move Direction
+// this does not work if LIST MODE is enabled. To invert y axis in LIST MODE go to setting->feature settings
 //#define INVERT_YAXIS
 
+//Invert the Z Axis move Direction
+// this does not work if LIST MODE is enabled. To invert z axis in LIST MODE go to setting->feature settings
+//#define INVERT_ZAXIS
 
 // Enable Unified Move Menu
 // Move, Home, Extrude, ABL at one Place and bring Gcode Menu on Home Menu
-#define UNIFIED_MENU
-
-//Enable Status Screen
-//----USE ICONS FROM MATERIAL THEME ONLY---//
-#define STATUS_SCREEN
+//#define UNIFIED_MENU
 
 /**
- * Enable gocde files list mode
+ * Enable list mode in Files menu and settings menu
  * It is friendly to display long file name, but the model preview feature is not available
  * Disable this if you want to use the model preview feature
  */
-//#define GCODE_LIST_MODE
+#define MENU_LIST_MODE
 
 
 //-------RESET SETTINGS & TOUCH SCREEN CALIBRATION------||
-//to reset the touch screen create a text file with name 'reset.txt' in root folder of the sd card and press reset button.
+// To reset the touch screen create a text file with name 'reset.txt' in root folder of the sd card and press reset button.
 
 
 // SD support
@@ -176,28 +183,53 @@
 
 #define SHOW_FAN_PERCENTAGE // enable to show fan speed as a percentage instead of a value
 
-/**
- * Support up to 7 custom gcodes, uncomment CUSTOM_X_LABEL and CUSTOM_X_GCODE to enable custom gcode
+/** CUSTOM GCODE COMMANDS
+ * Support up to 7 custom gcodes in Icon mode and 15 in List Mode.
+ * Uncomment CUSTOM_X_LABEL and CUSTOM_X_GCODE to enable custom gcode.
  * CUSTOM_X_LABEL is the name of the custom button, CUSTOM_X_GCODE
  * CUSTOM_X_GCODE is the gcode to be sent by the custom button, end with '\n'
- * You also need to customize the icon corresponding to the command
+ * You also need to customize the icon corresponding to the command if MENU_LIST_MODE is not enabled.
  * Copy your custom icon to the SD card to be updated, such as:"TFT35/bmp/Custom0.bmp", "TFT24/bmp/Custom1.bmp", etc...
  * The format of the custom icon is as follows
  * Bit depth: 24 / 32 bit, Pixel size: 95*95(for TFT35), 70*70(for TFT28/TFT24)
  */
 #define CUSTOM_0_LABEL "Restore EEPROM"
-#define CUSTOM_0_GCODE "M51\n"
-//#define CUSTOM_1_LABEL "Custom2"
-//#define CUSTOM_1_GCODE "M105\n"
-//#define CUSTOM_2_LABEL "Custom2"
-//#define CUSTOM_2_GCODE "M105\n"
-//#define CUSTOM_3_LABEL "Custom3"
-//#define CUSTOM_3_GCODE "M105\n"
+#define CUSTOM_0_GCODE "M501\n"
+#define CUSTOM_1_LABEL "Disable Steppers"
+#define CUSTOM_1_GCODE "M84\n"
+#define CUSTOM_2_LABEL "init SD Card"
+#define CUSTOM_2_GCODE "M21\n"
+#define CUSTOM_3_LABEL "Release Sd Card"
+#define CUSTOM_3_GCODE "M22\n"
 //#define CUSTOM_4_LABEL "Custom4"
 //#define CUSTOM_4_GCODE "M105\n"
 //#define CUSTOM_5_LABEL "Custom5"
 //#define CUSTOM_5_GCODE "M105\n"
 //#define CUSTOM_6_LABEL "Custom6"
 //#define CUSTOM_6_GCODE "M105\n"
+
+/*
+custom gcode below are compatible only if MENU_LIST_MODE is active
+*/
+#ifdef MENU_LIST_MODE
+//#define CUSTOM_7_LABEL "Custom7"
+//#define CUSTOM_7_GCODE "M105\n"
+//#define CUSTOM_8_LABEL "Custom8"
+//#define CUSTOM_8_GCODE "M105\n"
+//#define CUSTOM_9_LABEL "Custom9"
+//#define CUSTOM_9_GCODE "M105\n"
+//#define CUSTOM_10_LABEL "Custom10"
+//#define CUSTOM_10_GCODE "M105\n"
+//#define CUSTOM_11_LABEL "Custom11"
+//#define CUSTOM_11_GCODE "M105\n"
+//#define CUSTOM_12_LABEL "Custom12"
+//#define CUSTOM_12_GCODE "M105\n"
+//#define CUSTOM_13_LABEL "Custom13"
+//#define CUSTOM_13_GCODE "M105\n"
+//#define CUSTOM_14_LABEL "Custom14"
+//#define CUSTOM_14_GCODE "M105\n"
+#endif
+
+#define CANCEL_PRINT_GCODE "G28 X0 Y0\n"
 
 #endif

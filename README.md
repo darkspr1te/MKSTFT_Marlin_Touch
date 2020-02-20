@@ -1,19 +1,4 @@
-# MKSTFT Marlin Touch
-
-### MKS Marlin touch screen firmware repo
-- See mks-tft.txt for MKS Touch board build instructions and info
-- See https://github.com/darkspr1te/stm32f107vc_sd_bootloader for bootloader source for platformio 
-- See https://github.com/delwinbest/BIGTREETECH-TouchScreenFirmware for builds against master with MKSTFT patches
-  (updated more than https://github.com/darkspr1te/MKSTFT_Marlin_Touch ) 
-- See https://github.com/luc-github/ESP3D-WEBUI for esp2866/esp32 firmware to add custom wifi firmware  
-
-
-
-
-
 # software version
-### Vx.x.25.1
-- Added MKS 2.8/3.2 TFT touch marlin control panel - by darkspr1te 
 ### Vx.x.25
 - change character encoding from GBK to UTF-8, compatible with new languages
 - add "Preheat" menu for one button preheating(PLA, PETG, ABS)
