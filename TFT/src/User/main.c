@@ -26,9 +26,10 @@ void Hardware_GenericInit(void)
 
 
  //GPIO_Remap_USART2 
+#ifdef MKS_32_V1_4
 RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO,ENABLE);
 GPIO_PinRemapConfig(GPIO_Remap_USART2, ENABLE);
-
+#endif
   XPT2046_Init();
   W25Qxx_Init();
   LCD_Init();
